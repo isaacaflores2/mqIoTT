@@ -1,4 +1,4 @@
-package garagedoor.mqtt;
+package garagedoor.MqttHttpsBridge;
 
 public interface MqttClientSetup {
 

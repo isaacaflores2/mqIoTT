@@ -1,4 +1,4 @@
-package garagedoor.mqtt;
+package garagedoor.iot.device.mqtt;
 
 import garagedoor.iot.device.Device;
 
@@ -24,7 +24,7 @@ public class MqttDevice<T> implements Device<T> {
 
     @Override
     public String toString() {
-        return "id: " + id + " , topic:  " + topic + " , status: " + status + " , data: " + data;
+        return "MqttDevice[ id: " + id + " , topic:  " + topic + " , status: " + status + " , data: " + data + "]";
     }
 
     @Override

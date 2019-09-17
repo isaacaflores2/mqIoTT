@@ -3,15 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package garagedoor.iot.device;
+package garagedoor.iot.device.mqtt;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import garagedoor.Configurations.Config;
-import garagedoor.mqtt.MqttDevice;
+import garagedoor.iot.device.Device;
+import garagedoor.iot.device.DeviceManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MqttDeviceManager<T> implements DeviceManager {
+    public final static String DEFAULT_STATUS = "No status recieved.";
     private Config config;
     private String[] deviceTopics;
     private String[] deviceIDs;
@@ -55,7 +54,7 @@ public class MqttDeviceManager<T> implements DeviceManager {
     }
 
     @Override
-    public Set<Device<T>> devices() {
+    public Collection<Device<T>> devices() {
         return new HashSet<>(deviceMap.values());
     }
 
@@ -117,7 +116,7 @@ public class MqttDeviceManager<T> implements DeviceManager {
         if (deviceTopics != null) {
             if (deviceTopics.length > 0) {
                 for (int i = 0; i < deviceTopics.length; i++) {
-                    Device<T> device = new MqttDevice(deviceIDs[i], deviceTopics[i], "default", null);
+                    Device<T> device = new MqttDevice(deviceIDs[i], deviceTopics[i], DEFAULT_STATUS, null);
                     deviceMap.put(device.getId(), device);
                     deviceTopicToIdMap.put(device.getTopic(), device.getId());
                 }

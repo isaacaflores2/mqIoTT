@@ -3,6 +3,7 @@ package garagedoor.iot.device;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -11,7 +12,7 @@ import java.util.Set;
 public interface DeviceManager<T> {
     public int numDevices();
 
-    public Set<Device<T>> devices();
+    public Collection <Device<T>> devices();
 
     public void addDevice(Device<T> device);
 

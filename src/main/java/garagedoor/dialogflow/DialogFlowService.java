@@ -1,6 +1,7 @@
 package garagedoor.dialogflow;
 
 import garagedoor.Controllers.BridgeControllerImpl;
+import garagedoor.Controllers.DeviceManagerControllerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,9 @@ public class DialogFlowService implements DialogFlowRequestHandler {
 
 
     @Autowired
-    BridgeControllerImpl bridgeControllerImpl;
+    BridgeControllerImpl bridgeController;
+    @Autowired
+    DeviceManagerControllerImpl deviceManagerController;
 
     private Logger logger;
 
@@ -34,15 +37,15 @@ public class DialogFlowService implements DialogFlowRequestHandler {
         if (action != null) {
             switch (action) {
                 case ACTION_OPEN:
-                    bridgeControllerImpl.toggle("1");
+                    bridgeController.publish("1", "toggle");
                     response = "Opening your garage now.";
                     break;
                 case ACTION_CLOSE:
-                    bridgeControllerImpl.toggle("1");
+                    bridgeController.publish("1", "toggle");
                     response = "Closing your garage now.";
                     break;
                 case ACTION_STATUS:
-                    String garageStatus = bridgeControllerImpl.getDeviceData("2");
+                    String garageStatus = deviceManagerController.getDeviceData("2");
 
                     if (garageStatus.equals(DOOR_STATUS_OPEN)) {
                         response = "Your garage is " + garageStatus + ".";

@@ -16,14 +16,13 @@ import static org.mockito.Mockito.*;
 
 public class BridgeControllerImplTest {
 
-    @InjectMocks
-    private BridgeControllerImpl bridgeControllerImpl;
-
     @Mock
     private Bridge<String> bridge;
-
     @Mock
     private DeviceManager<String> deviceManager;
+
+    @InjectMocks
+    private BridgeController bridgeController = new BridgeControllerImpl(bridge, deviceManager);
 
     @BeforeEach
     public void setUp() throws Exception {
@@ -34,58 +33,29 @@ public class BridgeControllerImplTest {
     @Test
     public void index() {
         String index = "<h1>GarageDoor</h1>";
-        assertEquals(index, bridgeControllerImpl.index());
+        assertEquals(index, bridgeController.index());
     }
 
     @Test
     public void getMqttBridgeClientStatus() {
         String expecedResponse = "<h1> MQTT Client is running </h1>";
         when(bridge.isSubscribed()).thenReturn(true);
-        String response = bridgeControllerImpl.getMqttBridgeClientStatus();
+        String response = bridgeController.getMqttBridgeClientStatus();
         assertEquals(expecedResponse, response);
 
         expecedResponse = "<h1> MQTT Client is not running....FIX IT</h1>";
         when(bridge.isSubscribed()).thenReturn(false);
-        response = bridgeControllerImpl.getMqttBridgeClientStatus();
+        response = bridgeController.getMqttBridgeClientStatus();
         assertEquals(expecedResponse, response);
-
     }
 
     @Test
-    public void getNumDevices() {
-        int expectedNumDevices = 2;
-        when(deviceManager.numDevices()).thenReturn(expectedNumDevices);
-        int numDevices = bridgeControllerImpl.getNumDevices();
-        verify(deviceManager).numDevices();
-        assertEquals(expectedNumDevices, numDevices);
-    }
-
-    @Test
-    public void getDeviceData() {
-        String expectedData = "open";
-        String id = "2";
-        when(deviceManager.getDeviceData(id)).thenReturn(expectedData);
-        String data = bridgeControllerImpl.getDeviceData(id);
-        verify(deviceManager).getDeviceData(id);
-        assertEquals(expectedData, data);
-    }
-
-    @Test
-    public void getDeviceStatus() {
-        String expectedStatus = "running";
-        String id = "2";
-        when(deviceManager.getDeviceData(id)).thenReturn(expectedStatus);
-        String status = bridgeControllerImpl.getDeviceData(id);
-        verify(deviceManager).getDeviceData(id);
-        assertEquals(expectedStatus, status);
-    }
-
-    @Test
-    public void toggle() {
-        String expectedResponse = "<h1> The garage door toggle. </h1>";
+    public void publish() {
+        String expectedResponse = "success";
         String id = "1";
+        String msg = "toggle";
         when(bridge.publish(id, "toggle")).thenReturn(expectedResponse);
-        String response = bridgeControllerImpl.toggle(id);
+        String response = bridgeController.publish(id, msg);
         verify(bridge).publish(id, "toggle");
         assertEquals(expectedResponse, response);
     }
@@ -93,6 +63,6 @@ public class BridgeControllerImplTest {
     @Test
     public void handleAllExceptions() {
         RuntimeException e = new RuntimeException();
-        assertEquals(new ResponseEntity<Exception>(e, HttpStatus.INTERNAL_SERVER_ERROR), bridgeControllerImpl.handleAllExceptions(e));
+        assertEquals(new ResponseEntity<Exception>(e, HttpStatus.INTERNAL_SERVER_ERROR), bridgeController.handleAllExceptions(e));
     }
 }

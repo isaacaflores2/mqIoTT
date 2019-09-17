@@ -3,7 +3,7 @@ package garagedoor.Controllers;
 
 import garagedoor.iot.device.Device;
 import garagedoor.iot.device.DeviceManager;
-import garagedoor.mqtt.MqttDevice;
+import garagedoor.iot.device.mqtt.MqttDevice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -21,11 +21,11 @@ import static org.mockito.Mockito.*;
 
 public class DeviceManagerControllerImplTest {
 
-    @InjectMocks
-    private DeviceManagerControllerImpl deviceManagerControllerImpl;
-
     @Mock
     private DeviceManager deviceManager;
+
+    @InjectMocks
+    private DeviceManagerController deviceManagerController = new DeviceManagerControllerImpl(deviceManager);
 
     private Device<String> expectedDevice;
     private Set<Device> expectedDeviceSet;
@@ -41,14 +41,14 @@ public class DeviceManagerControllerImplTest {
     @Test
     public void index() {
         String index = "MqttDevice Manager home";
-        assertEquals(index, deviceManagerControllerImpl.index());
+        assertEquals(index, deviceManagerController.index());
     }
 
     @Test
     public void getNumDevices() {
         int expectedNumDevices = 2;
         when(deviceManager.numDevices()).thenReturn(expectedNumDevices);
-        int numDevices = deviceManagerControllerImpl.getNumDevices();
+        int numDevices = deviceManagerController.getNumDevices();
         verify(deviceManager).numDevices();
         assertEquals(expectedNumDevices, numDevices);
     }
@@ -56,7 +56,7 @@ public class DeviceManagerControllerImplTest {
     @Test
     public void getDevices() {
         when(deviceManager.devices()).thenReturn(expectedDeviceSet);
-        Set<Device> deviceList = deviceManagerControllerImpl.getDevices();
+        Set<Device> deviceList = (Set) deviceManagerController.getDevices();
         verify(deviceManager).devices();
         assertEquals(expectedDeviceSet, deviceList);
     }
@@ -65,7 +65,7 @@ public class DeviceManagerControllerImplTest {
     public void getDevice() {
         String id = "1";
         when(deviceManager.getDevice(id)).thenReturn(expectedDevice);
-        Device device = deviceManagerControllerImpl.getDevice(id);
+        Device device = deviceManagerController.getDevice(id);
         verify(deviceManager).getDevice(id);
         assertEquals(expectedDevice, device);
     }
@@ -74,7 +74,7 @@ public class DeviceManagerControllerImplTest {
     public void containsDevice() {
         String id = "1";
         when(deviceManager.contains(id)).thenReturn(true);
-        boolean returnedBool =  deviceManagerControllerImpl.containsDevice(id);
+        boolean returnedBool =  deviceManagerController.containsDevice(id);
         verify(deviceManager).contains(id);
         assert(returnedBool);
     }
@@ -84,13 +84,13 @@ public class DeviceManagerControllerImplTest {
         String id = "1";
         String expectedStatus = "running";
         when(deviceManager.getDeviceStatus(id)).thenReturn(expectedStatus);
-        String status  = deviceManagerControllerImpl.getDeviceStatus(id);
+        String status  = deviceManagerController.getDeviceStatus(id);
         verify(deviceManager).getDeviceStatus(id);
         assertEquals(expectedStatus, status);
     }
 
     @Test
-    void updateDeviceStatus(){
+    public void updateDeviceStatus(){
         String id = "1";
         String expectedStatus = "running";
 
@@ -102,13 +102,41 @@ public class DeviceManagerControllerImplTest {
 
         when(deviceManager.getDeviceStatus(id)).thenReturn(expectedStatus);
 
-        deviceManagerControllerImpl.updateDeviceStatus(id, expectedStatus);
-        assertEquals(expectedStatus, deviceManagerControllerImpl.getDeviceStatus(id));
+        deviceManagerController.updateDeviceStatus(id, expectedStatus);
+        assertEquals(expectedStatus, deviceManagerController.getDeviceStatus(id));
+    }
+
+    @Test
+    public void getDeviceData() {
+
+        String id = "1";
+        String expectedData = "sample data";
+        when(deviceManager.getDeviceData(id)).thenReturn(expectedData);
+        String data  = deviceManagerController.getDeviceData(id);
+        verify(deviceManager).getDeviceData(id);
+        assertEquals(expectedData, data);
+    }
+
+    @Test
+    public void updateDeviceData() {
+        String id = "1";
+        String expectedData = "running";
+
+        doAnswer((i) -> {
+            assertEquals(id, i.getArgument(0));
+            assertTrue(expectedData.equals(i.getArgument(1)));
+            return null;
+        }).when(deviceManager).updateDeviceData(id, expectedData);
+
+        when(deviceManager.getDeviceData(id)).thenReturn(expectedData);
+
+        deviceManagerController.updateDeviceData(id, expectedData);
+        assertEquals(expectedData, deviceManagerController.getDeviceData(id));
     }
 
     @Test
     public void handleAllExceptions() {
         RuntimeException e = new RuntimeException();
-        assertEquals(new ResponseEntity<Exception>(e, HttpStatus.INTERNAL_SERVER_ERROR), deviceManagerControllerImpl.handleAllExceptions(e));
+        assertEquals(new ResponseEntity<Exception>(e, HttpStatus.INTERNAL_SERVER_ERROR), deviceManagerController.handleAllExceptions(e));
     }
 }

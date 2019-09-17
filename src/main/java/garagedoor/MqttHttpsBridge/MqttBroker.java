@@ -1,4 +1,4 @@
-package garagedoor.mqtt;
+package garagedoor.MqttHttpsBridge;
 
 import garagedoor.Configurations.Config;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;

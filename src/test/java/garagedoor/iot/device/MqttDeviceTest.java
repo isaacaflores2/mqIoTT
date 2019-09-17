@@ -1,6 +1,6 @@
 package garagedoor.iot.device;
 
-import garagedoor.mqtt.MqttDevice;
+import garagedoor.iot.device.mqtt.MqttDevice;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

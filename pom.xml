@@ -10,11 +10,11 @@
 	</parent>
 
 	<groupId>rocks.myddns.isaacaflores2</groupId>
-	<artifactId>SpringBootMqttHttpsBridge</artifactId>
+	<artifactId>mqIoTT</artifactId>
 	<version>0.0.1</version>
 	<packaging>jar</packaging>
-	<name>SpringBootMqttHttpsBridge</name>
-	<description>MqttHttpsBridge implementation using Spring Boot</description>
+	<name>mqIoTT</name>
+	<description>Mqtt Web Server implementation using Spring Boot</description>
 
 	<properties>
 		<java.version>1.8</java.version>
@@ -92,6 +92,14 @@
 			<artifactId>alexa-skills-kit</artifactId>
 			<version>1.8.1</version>
 		</dependency>
+
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.10</version>
+			<scope>provided</scope>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -6,7 +6,8 @@
 package garagedoor.iot.device;
 
 import garagedoor.Configurations.Config;
-import garagedoor.mqtt.MqttDevice;
+import garagedoor.iot.device.mqtt.MqttDevice;
+import garagedoor.iot.device.mqtt.MqttDeviceManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -28,7 +29,7 @@ public class MqttDeviceManagerTest
     public String topic2  = "garage/sensor/door";
     public String id1 = "1";
     public String id2 = "2";
-    public String status = "default";
+    public String status = MqttDeviceManager.DEFAULT_STATUS;
     public String data = null;
     public int numDevices = 2;
     

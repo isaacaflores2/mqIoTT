@@ -1,36 +1,45 @@
 package garagedoor.Controllers;
 
 import garagedoor.iot.device.Device;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface DeviceManagerController {
 
-    @RequestMapping("/")
+    @GetMapping("/")
     public String index();
 
-    @RequestMapping("/numdevices")
+    @GetMapping("/numdevices")
+    @ResponseBody
     public int getNumDevices();
 
-    @RequestMapping("/getdevices")
-    public Set<Device> getDevices();
+    @GetMapping("/getdevices")
+    @ResponseBody
+    public Collection<Device<String>> getDevices();
 
-    @RequestMapping("/get/{getId}")
+    @GetMapping("/get/{getId}")
+    @ResponseBody
     public Device getDevice(@PathVariable String id);
 
-    @RequestMapping("/contains/{getId}")
+    @GetMapping("/contains/{getId}")
+    @ResponseBody
     public boolean containsDevice(@PathVariable String id);
 
-    @RequestMapping("/getStatus/{getId}")
+    @GetMapping("/getStatus/{getId}")
+    @ResponseBody
     public String getDeviceStatus(@PathVariable String id);
 
-    @RequestMapping("/updatestatus/{getId}/getStatus/{getStatus}")
-    public void updateDeviceStatus(@PathVariable String id, @PathVariable String status);
+    @PostMapping("/updatestatus")
+    public void updateDeviceStatus(@RequestParam String id, @RequestParam String status);
+
+    @GetMapping("/device/data/{}")
+    @ResponseBody
+    public String getDeviceData(@PathVariable String id);
+
+    @PostMapping("/updatedata")
+    public void updateDeviceData(@RequestParam String id, @RequestParam String data);
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Exception> handleAllExceptions(RuntimeException e);

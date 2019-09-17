@@ -3,8 +3,6 @@ package garagedoor.MqttHttpsBridge;
 import garagedoor.Configurations.Config;
 import garagedoor.iot.device.Device;
 import garagedoor.iot.device.DeviceManager;
-import garagedoor.mqtt.MqttBroker;
-import garagedoor.mqtt.MqttClientSetup;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttClient;
@@ -136,7 +134,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
     }
 
     private void requestStatusFromAllDevices() {
-        Set<Device<String>> deviceSet = deviceManager.devices();
+        Set<Device<String>> deviceSet = (Set) deviceManager.devices();
         for (Device<String> device : deviceSet) {
             String id = device.getId();
             publish(id, READ_COMMAND);

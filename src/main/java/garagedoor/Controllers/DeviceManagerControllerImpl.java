@@ -1,26 +1,22 @@
 package garagedoor.Controllers;
 
-import java.util.List;
-import java.util.Set;
+import java.util.Collection;
 
 import garagedoor.iot.device.Device;
 import garagedoor.iot.device.DeviceManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/devicemanager")
 public class DeviceManagerControllerImpl implements DeviceManagerController
 {
-    private DeviceManager deviceManager;
+    private DeviceManager<String> deviceManager;
 
     @Autowired
-    public DeviceManagerControllerImpl(DeviceManager deviceManager)
+    public DeviceManagerControllerImpl(DeviceManager<String> deviceManager)
     {
         this.deviceManager = deviceManager;
     }
@@ -38,7 +34,7 @@ public class DeviceManagerControllerImpl implements DeviceManagerController
     }
 
     @Override
-    public Set<Device> getDevices()
+    public Collection<Device<String>> getDevices()
     {
         return deviceManager.devices();
     }
@@ -66,7 +62,23 @@ public class DeviceManagerControllerImpl implements DeviceManagerController
     {
         deviceManager.updateDeviceStatus(id, status);
     }
-    
+
+    @Override
+    public String getDeviceData(@PathVariable String deviceId) {
+
+        String data  = (String) deviceManager.getDeviceData(deviceId);
+
+        if(data == null)
+            data = "Sorry. There is no available status on your garage right now.";
+
+        return data;
+    }
+
+    @Override
+    public void updateDeviceData(@RequestParam String id, @RequestParam String data) {
+        deviceManager.updateDeviceData(id, data);
+    }
+
     @Override
     public final ResponseEntity<Exception> handleAllExceptions(RuntimeException e)
     {
