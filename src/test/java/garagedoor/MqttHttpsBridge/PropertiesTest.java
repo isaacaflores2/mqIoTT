@@ -7,7 +7,7 @@ package garagedoor.MqttHttpsBridge;
 
 
 
-import garagedoor.Configurations.Config;
+import garagedoor.Configurations.Properties;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * @author iflores
  */
 @SpringBootTest
-@ContextConfiguration(classes = Config.class)
+@ContextConfiguration(classes = Properties.class)
 @TestPropertySource(properties = {
         "mqtthttpsbridge.mqtttopics=topic1,topic2",
         "mqtthttpsbridge.deviceids=1,2",
@@ -33,10 +33,10 @@ import static org.junit.jupiter.api.Assertions.*;
         "mqtthttpsbridge.mqttusername=testUser",
         "mqtthttpsbridge.mqttpassword=testPass"
 })
-public class ConfigTest
+public class PropertiesTest
 {
    @Autowired
-   Config config;
+   Properties properties;
     
     @Test
      public void testMqttTopics()
@@ -44,7 +44,7 @@ public class ConfigTest
         String[] expResult = new String[2];
         expResult[0] = "topic1";
         expResult[1] = "topic2";
-        assertArrayEquals(expResult, config.mqttTopics);
+        assertArrayEquals(expResult, properties.mqttTopics);
     }
      
     @Test
@@ -53,36 +53,36 @@ public class ConfigTest
         String[] expResult = new String[2];
         expResult[0] = "1";
         expResult[1] = "2";
-        assertArrayEquals(expResult, config.deviceIds);
+        assertArrayEquals(expResult, properties.deviceIds);
     }
     
     @Test
     public void testNumDevices()
     {
-        assertEquals("2", config.numDevices);
+        assertEquals("2", properties.numDevices);
     }
     
     @Test
     public void testMqttBrokerAddress()
     {
-        assertEquals("ssl://url.test:8883", config.mqttBrokerAddress);
+        assertEquals("ssl://url.test:8883", properties.mqttBrokerAddress);
     }
     
     @Test
     public void testMqttClientId()
     {
-        assertEquals("testId", config.mqttClientId);
+        assertEquals("testId", properties.mqttClientId);
     }
     
     @Test
     public void testMqttBrokerUsername()
     {
-        assertEquals("testUser", config.mqttBrokerUsername);
+        assertEquals("testUser", properties.mqttBrokerUsername);
     }
     
     @Test
     public void testMqttBrokerPassword()
     {
-        assertEquals("testPass", config.mqttBrokerPassword);
+        assertEquals("testPass", properties.mqttBrokerPassword);
     }
 }

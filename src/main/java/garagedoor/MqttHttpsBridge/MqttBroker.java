@@ -1,6 +1,6 @@
 package garagedoor.MqttHttpsBridge;
 
-import garagedoor.Configurations.Config;
+import garagedoor.Configurations.Properties;
 import org.eclipse.paho.client.mqttv3.persist.MemoryPersistence;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,17 +15,17 @@ public class MqttBroker {
     public MemoryPersistence persistence;
 
     @Autowired
-    public MqttBroker(Config config) {
+    public MqttBroker(Properties properties) {
         qos = 2;
         persistence = new MemoryPersistence();
-        loadConfigurationParameters(config);
+        loadConfigurationParameters(properties);
     }
 
-    public void loadConfigurationParameters(Config config) {
-        broker = config.mqttBrokerAddress;
-        clientId = config.mqttClientId;
-        mqttUsername = config.mqttBrokerUsername;
-        mqttPassword = config.mqttBrokerPassword;
+    public void loadConfigurationParameters(Properties properties) {
+        broker = properties.mqttBrokerAddress;
+        clientId = properties.mqttClientId;
+        mqttUsername = properties.mqttBrokerUsername;
+        mqttPassword = properties.mqttBrokerPassword;
     }
 
 }

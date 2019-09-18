@@ -5,7 +5,7 @@
  */
 package garagedoor.MqttHttpsBridge;
 
-import garagedoor.Configurations.Config;
+import garagedoor.Configurations.Properties;
 import garagedoor.iot.device.Device;
 import garagedoor.iot.device.DeviceManager;
 import garagedoor.iot.device.mqtt.MqttDeviceManager;
@@ -32,7 +32,7 @@ import static org.mockito.Mockito.*;
 public class MqttBridgeTest
 {
 
-    private Config config;
+    private Properties properties;
     
     @InjectMocks
     private  MqttBridge mqttBridge;
@@ -60,20 +60,20 @@ public class MqttBridgeTest
         expMqttDevices = new MqttDevice[2];
         expMqttDevices[0] = new MqttDevice(topic1 , id1 ,status, data);
         expMqttDevices[1] = new MqttDevice(topic2 , id2 ,status, data);
-        config = new Config();
-        config.mqttTopics = new String[]{topic1, topic2};
-        config.deviceIds = new String[]{id1, id2};
-        config.numDevices = "2";
-        config.mqttBrokerAddress = "ssl://localhost";
-        config.mqttClientId = "bridgeTest";
-        config.mqttBrokerUsername = "iflores";
-        config.mqttBrokerPassword = "smarthomeoptimis13!";
+        properties = new Properties();
+        properties.mqttTopics = new String[]{topic1, topic2};
+        properties.deviceIds = new String[]{id1, id2};
+        properties.numDevices = "2";
+        properties.mqttBrokerAddress = "ssl://localhost";
+        properties.mqttClientId = "bridgeTest";
+        properties.mqttBrokerUsername = "iflores";
+        properties.mqttBrokerPassword = "smarthomeoptimis13!";
 
 
-        deviceManager = new MqttDeviceManager<>(config);
-        mqttBroker = new MqttBroker(config);
-        mqttBridge = new MqttBridge(config, deviceManager, mqttBroker);
-        mqttBridge.loadConfigurationParameters();
+        deviceManager = new MqttDeviceManager<>(properties);
+        mqttBroker = new MqttBroker(properties);
+        mqttBridge = new MqttBridge(properties, deviceManager, mqttBroker);
+        mqttBridge.loadProperties();
 
         MockitoAnnotations.initMocks(this);
     }      

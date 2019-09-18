@@ -1,6 +1,6 @@
 package garagedoor.MqttHttpsBridge;
 
-import garagedoor.Configurations.Config;
+import garagedoor.Configurations.Properties;
 import garagedoor.iot.device.Device;
 import garagedoor.iot.device.DeviceManager;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -20,10 +20,9 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
     public static final String READ_COMMAND = "read";
     public static final String SENSOR_MQTT_TOPIC = "sensor";
 
-
     @Autowired
-    public MqttBridge(Config config, DeviceManager deviceManager, MqttBroker mqttBroker) {
-        super(config, deviceManager, mqttBroker);
+    public MqttBridge(Properties properties, DeviceManager deviceManager, MqttBroker mqttBroker) {
+        super(properties, deviceManager, mqttBroker);
     }
 
     public void subscribe() {
@@ -49,7 +48,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
             }
             isSubscribed = true;
         } catch (MqttException e) {
-            printMqttException(e, "Mqtt Client Subcscribe Exeception.");
+            BridgeUtils.printMqttException(e, "Mqtt Client Subcscribe Exeception.", logger);
         }
     }
 
@@ -68,7 +67,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
             logger.info(" to device id : " + deviceId + " with the message: " + mqttMsg);
             return mqttMsg.toString();
         } catch (MqttException e) {
-            printMqttException(e, "Mqtt Client Public Exception.");
+            BridgeUtils.printMqttException(e, "Mqtt Client Public Exception.", logger);
             return e.toString();
         }
     }
@@ -111,7 +110,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
         boolean onStartup = true;
         logger.info("MqttClient is starting!");
 
-        loadConfigurationParameters();
+        loadProperties();
         connectToBroker();
 
         while (true) {
@@ -166,7 +165,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
                 logger.warn("mqttClient failed to connecte to broker.");
             }
         } catch (MqttException e) {
-            printMqttException(e, "Mqtt Client Setup Exeception.");
+            BridgeUtils.printMqttException(e, "Mqtt Client Setup Exeception.", logger);
         }
     }
 

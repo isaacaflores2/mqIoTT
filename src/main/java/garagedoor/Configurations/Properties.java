@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
-public class Config {
+public class Properties {
     @Value("${mqtthttpsbridge.mqtttopics:empty}")
     public String[] mqttTopics;
 

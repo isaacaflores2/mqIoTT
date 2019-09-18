@@ -5,7 +5,7 @@
  */
 package garagedoor.iot.device;
 
-import garagedoor.Configurations.Config;
+import garagedoor.Configurations.Properties;
 import garagedoor.iot.device.mqtt.MqttDevice;
 import garagedoor.iot.device.mqtt.MqttDeviceManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class MqttDeviceManagerTest
 {
 
-    private Config config;
+    private Properties properties;
        
     public MqttDeviceManager mqttDeviceManager;
     
@@ -41,14 +41,14 @@ public class MqttDeviceManagerTest
         expectedMqttDevices = new MqttDevice[2];
         expectedMqttDevices[0] = new MqttDevice(id1, topic1 ,status, data);
         expectedMqttDevices[1] = new MqttDevice(id2, topic2  ,status, data);
-        config = new Config();
-        config.mqttTopics = new String[]{topic1, topic2};
-        config.deviceIds = new String[]{id1, id2};
-        config.numDevices = "2";
-        config.mqttBrokerAddress = "";
-        config.mqttClientId = "";
-        config.mqttBrokerUsername = "";
-        config.mqttBrokerPassword = "";
+        properties = new Properties();
+        properties.mqttTopics = new String[]{topic1, topic2};
+        properties.deviceIds = new String[]{id1, id2};
+        properties.numDevices = "2";
+        properties.mqttBrokerAddress = "";
+        properties.mqttClientId = "";
+        properties.mqttBrokerUsername = "";
+        properties.mqttBrokerPassword = "";
 
     }
 
@@ -106,7 +106,7 @@ public class MqttDeviceManagerTest
         //Test object that is not of type Config
         assertThrows(IllegalArgumentException.class, () -> {mqttDeviceManager.loadDevices(data);});
 
-        mqttDeviceManager.loadDevices(config);
+        mqttDeviceManager.loadDevices(properties);
 
         assertEquals(numDevices, mqttDeviceManager.numDevices());
         assertEquals(expectedMqttDevices[0].toString(), mqttDeviceManager.getDevice(id1).toString());

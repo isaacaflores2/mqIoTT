@@ -1,6 +1,6 @@
 package garagedoor.MqttHttpsBridge;
 
-import garagedoor.Configurations.Config;
+import garagedoor.Configurations.Properties;
 import garagedoor.iot.device.DeviceManager;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Component
 public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
 
-    protected Config config;
+    protected Properties properties;
     protected DeviceManager<T> deviceManager;
     protected MqttBroker mqttBroker;
     protected MqttClient mqttClient;
@@ -29,28 +29,20 @@ public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
         mqttBroker = null;
         topics = null;
         deviceManager = null;
-        config = null;
+        properties = null;
         logger = LoggerFactory.getLogger(MqttBridge.class);
         lineSeperator = System.lineSeparator();
     }
 
     @Autowired
-    public AbstractBridge(Config config, DeviceManager deviceManager, MqttBroker mqttBroker) {
+    public AbstractBridge(Properties properties, DeviceManager deviceManager, MqttBroker mqttBroker) {
         this();
-        this.config = config;
+        this.properties = properties;
         this.deviceManager = deviceManager;
         this.mqttBroker = mqttBroker;
     }
 
     public abstract void start();
-
-    protected void printMqttException(MqttException e, String msg) {
-        logger.error("Mqtt Exception: " + msg + "MqttException Details: "
-                + e.getMessage() + " Reason: " + e.getReasonCode() + " loc " + e.getLocalizedMessage()
-                + " cause " + e.getCause());
-
-        e.printStackTrace();
-    }
 
     public abstract void subscribe();
 
@@ -60,31 +52,26 @@ public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
         return isSubscribed;
     }
 
-    public void loadConfigurationParameters() {
+    public void loadProperties() {
         logger.info("Loading config files...");
 
-        if (config == null) {
+        if (properties == null) {
             logger.error("Config is null! " + lineSeperator
                     + "Check your application properties files for requried MqttBridgeClient configuration parameters:" + lineSeperator
                     + "1) mqttTopics 2) mqttClientId 3) mqttBrokerUsername 4) MqttBrokerPassword 5) mqttBrokerAddress");
             return;
         }
 
-        logger.info("Config broker value: " + config.mqttBrokerAddress);
-        topics = config.mqttTopics;
+        logger.info("Properties broker value: " + properties.mqttBrokerAddress);
+        topics = properties.mqttTopics;
 
         try {
-            mqttClient = new MqttClient(mqttBroker.broker, generateClientId(), mqttBroker.persistence);
+            mqttClient = new MqttClient(mqttBroker.broker, BridgeUtils.generateClientId(mqttBroker.clientId), mqttBroker.persistence);
         } catch (MqttException e) {
-            printMqttException(e, "Mqtt Client Setup Exeception! ");
+            BridgeUtils.printMqttException(e, "Mqtt Client Setup Exeception! ", logger);
         }
     }
 
     public abstract void connectToBroker();
-
-    //Generates unique client getId to prevent client already connected exceptin with Broker
-    public String generateClientId() {
-        return mqttBroker.clientId + System.nanoTime();
-    }
 
 }

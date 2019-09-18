@@ -7,7 +7,7 @@ package garagedoor.iot.device.mqtt;
 
 import java.util.*;
 
-import garagedoor.Configurations.Config;
+import garagedoor.Configurations.Properties;
 import garagedoor.iot.device.Device;
 import garagedoor.iot.device.DeviceManager;
 import org.slf4j.Logger;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class MqttDeviceManager<T> implements DeviceManager {
     public final static String DEFAULT_STATUS = "No status recieved.";
-    private Config config;
+    private Properties properties;
     private String[] deviceTopics;
     private String[] deviceIDs;
     private Map<String, Device<T>> deviceMap;
@@ -28,7 +28,7 @@ public class MqttDeviceManager<T> implements DeviceManager {
 
 
     public MqttDeviceManager() {
-        this.config = null;
+        this.properties = null;
         this.deviceTopics = null;
         this.deviceIDs = null;
         this.deviceMap = new HashMap<>();
@@ -38,14 +38,14 @@ public class MqttDeviceManager<T> implements DeviceManager {
     }
 
     @Autowired
-    public MqttDeviceManager(Config config) {
-        this.config = config;
+    public MqttDeviceManager(Properties properties) {
+        this.properties = properties;
         this.deviceTopics = null;
         this.deviceIDs = null;
         this.deviceMap = new HashMap<>();
         this.deviceTopicToIdMap = new HashMap<>();
         this.logger = LoggerFactory.getLogger(MqttDeviceManager.class);
-        loadDevices(this.config);
+        loadDevices(this.properties);
     }
 
     @Override
@@ -104,14 +104,14 @@ public class MqttDeviceManager<T> implements DeviceManager {
         if (o == null)
             throw new IllegalArgumentException("Object is null. Cannot load devices.");
 
-        if (o instanceof Config)
-            this.config = (Config) o;
+        if (o instanceof Properties)
+            this.properties = (Properties) o;
         else
             throw new IllegalArgumentException("Object is not instance of type Config. Cannot load devices.");
 
         //Load parameters
-        this.deviceTopics = config.mqttTopics;
-        this.deviceIDs = config.deviceIds;
+        this.deviceTopics = properties.mqttTopics;
+        this.deviceIDs = properties.deviceIds;
 
         if (deviceTopics != null) {
             if (deviceTopics.length > 0) {
