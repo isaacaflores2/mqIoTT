@@ -9,6 +9,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 @Component
 public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
 
@@ -16,18 +20,18 @@ public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
     protected DeviceManager<T> deviceManager;
     protected MqttBroker mqttBroker;
     protected MqttClient mqttClient;
-    protected boolean isClientSetup = false;
-    protected boolean isSubscribed = false;
-    protected String[] topics;
+    protected boolean isClientSetup;
+    protected boolean isSubscribed;
+    protected List<String> topics;
     protected Logger logger;
-    protected String lineSeperator;
+    private String lineSeperator;
 
     public AbstractBridge() {
         mqttClient = null;
         isClientSetup = false;
         isSubscribed = false;
         mqttBroker = null;
-        topics = null;
+        topics = new ArrayList<>();
         deviceManager = null;
         properties = null;
         logger = LoggerFactory.getLogger(MqttBridge.class);
@@ -63,7 +67,7 @@ public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
         }
 
         logger.info("Properties broker value: " + properties.mqttBrokerAddress);
-        topics = properties.mqttTopics;
+        topics.addAll(Arrays.asList(properties.mqttTopics));
 
         try {
             mqttClient = new MqttClient(mqttBroker.broker, BridgeUtils.generateClientId(mqttBroker.clientId), mqttBroker.persistence);
@@ -73,5 +77,4 @@ public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
     }
 
     public abstract void connectToBroker();
-
 }

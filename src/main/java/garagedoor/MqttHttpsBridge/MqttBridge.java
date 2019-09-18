@@ -28,23 +28,40 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
     public void subscribe() {
         logger.info("MqttClient is subscribing...");
 
-        if (!mqttClient.isConnected())
+        if (!mqttClient.isConnected()) {
             connectToBroker();
-
-        if (isSubscribed == false) {
+        }
+        if (!isSubscribed) {
             subscribeToAllTopics();
         }
 
         logger.info("cliend has subscribed to all topics.");
     }
 
+    @Override
+    public void connectToBroker() {
+        logger.info("MqttClient is setting up...");
+
+        try {
+            MqttConnectOptions connectionOptions = new MqttConnectOptions();
+            connectionOptions.setCleanSession(true);
+            connectionOptions.setUserName(mqttBroker.mqttUsername);
+            connectionOptions.setPassword(mqttBroker.mqttPassword.toCharArray());
+            mqttClient.setCallback(this);
+            mqttClient.connect(connectionOptions);
+
+            if (!mqttClient.isConnected()) {
+                logger.warn("mqttClient failed to connect to broker.");
+            }
+        } catch (MqttException e) {
+            BridgeUtils.printMqttException(e, "Mqtt Client Setup Exeception.", logger);
+        }
+    }
+
     private void subscribeToAllTopics() {
         try {
-
-            if (topics.length > 0) {
-                for (int i = 0; i < topics.length; i++) {
-                    mqttClient.subscribe(topics[i]);
-                }
+            for (String topic : topics) {
+                mqttClient.subscribe(topic);
             }
             isSubscribed = true;
         } catch (MqttException e) {
@@ -63,7 +80,6 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
             mqttMsg.setQos(mqttBroker.qos);
             String topic = deviceManager.getDevice(deviceId).getTopic();
             mqttClient.publish(topic, mqttMsg);
-
             logger.info(" to device id : " + deviceId + " with the message: " + mqttMsg);
             return mqttMsg.toString();
         } catch (MqttException e) {
@@ -81,7 +97,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
 
         while (!mqttClient.isConnected()) {
             logger.warn("Failed to reconnect...waiting 5 seconds to try again...");
-            mqttSleep(5000);
+            BridgeUtils.sleepThread(5000, logger);
             connectToBroker();
         }
         subscribe();
@@ -118,7 +134,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
             while (!mqttClient.isConnected()) {
                 logger.warn("MqttClient is not setup!");
                 connectToBroker();
-                mqttSleep(5000);
+                BridgeUtils.sleepThread(5000, logger);
             }
 
             if (!isSubscribed) {
@@ -137,35 +153,6 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
         for (Device<String> device : deviceSet) {
             String id = device.getId();
             publish(id, READ_COMMAND);
-        }
-    }
-
-    public void mqttSleep(int mSec) {
-        try {
-            Thread.sleep(mSec);
-        } catch (InterruptedException ex) {
-            logger.error("MqttSleep interrup execption.");
-            logger.error(ex.getStackTrace().toString());
-        }
-    }
-
-    @Override
-    public void connectToBroker() {
-        logger.info("MqttClient is setting up...");
-
-        try {
-            MqttConnectOptions connectionOptions = new MqttConnectOptions();
-            connectionOptions.setCleanSession(true);
-            connectionOptions.setUserName(mqttBroker.mqttUsername);
-            connectionOptions.setPassword(mqttBroker.mqttPassword.toCharArray());
-            mqttClient.setCallback(this);
-            mqttClient.connect(connectionOptions);
-
-            if (!mqttClient.isConnected()) {
-                logger.warn("mqttClient failed to connecte to broker.");
-            }
-        } catch (MqttException e) {
-            BridgeUtils.printMqttException(e, "Mqtt Client Setup Exeception.", logger);
         }
     }
 

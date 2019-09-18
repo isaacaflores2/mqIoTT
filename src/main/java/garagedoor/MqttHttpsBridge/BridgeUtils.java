@@ -16,4 +16,13 @@ public class BridgeUtils {
                 + " cause " + e.getCause());
         e.printStackTrace();
     }
+
+    public static void sleepThread(int mSec, Logger logger) {
+        try {
+            Thread.sleep(mSec);
+        } catch (InterruptedException ex) {
+            logger.error("MqttSleep interrup execption.");
+            logger.error(ex.getMessage());
+        }
+    }
 }
