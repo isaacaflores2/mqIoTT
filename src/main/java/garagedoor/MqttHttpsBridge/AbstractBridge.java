@@ -4,6 +4,7 @@ import garagedoor.Configurations.Properties;
 import garagedoor.iot.device.DeviceManager;
 import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ import java.util.List;
 @Component
 public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
 
+    public static final String READ_COMMAND = "read";
+    public static final String SENSOR_MQTT_TOPIC = "sensor";
+
     protected Properties properties;
     protected DeviceManager<T> deviceManager;
     protected MqttBroker mqttBroker;
@@ -25,6 +29,22 @@ public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
     protected List<String> topics;
     protected Logger logger;
     private String lineSeperator;
+
+    public enum PublishResult {
+        SUCCESS,
+        FAILURE;
+
+        public String errorMessage;
+
+        PublishResult(){
+            errorMessage = null;
+        }
+
+        public void setErrorMessage(String msg){
+            errorMessage = errorMessage;
+        }
+    };
+
 
     public AbstractBridge() {
         mqttClient = null;
@@ -50,7 +70,7 @@ public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
 
     public abstract void subscribe();
 
-    public abstract String publish(String deviceId, String content);
+    public abstract JSONObject publish(String deviceId, String content);
 
     public boolean isSubscribed() {
         return isSubscribed;

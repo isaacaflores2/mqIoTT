@@ -22,6 +22,13 @@
 		<mockito.version>2.24.0</mockito.version>
 	</properties>
 
+	<repositories>
+		<repository>
+			<id>Eclipse Paho Repo</id>
+			<url>https://repo.eclipse.org/content/repositories/paho-releases/</url>
+		</repository>
+	</repositories>
+
 	<dependencies>		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -50,15 +57,11 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.eclipse.paho</groupId>
 			<artifactId>org.eclipse.paho.client.mqttv3</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.guava</groupId>
-			<artifactId>guava</artifactId>
-			<version>27.1-jre</version>
+			<version>1.2.1</version>
 		</dependency>
 
 		<dependency>

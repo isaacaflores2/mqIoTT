@@ -11,7 +11,7 @@ public interface BridgeController {
     @GetMapping("/connection")
     public String getMqttBridgeClientStatus();
 
-    @PostMapping("/publish")
+    @GetMapping("/publish")
     public String publish(@RequestParam String id, @RequestParam String msg);
 
     @ExceptionHandler(RuntimeException.class)

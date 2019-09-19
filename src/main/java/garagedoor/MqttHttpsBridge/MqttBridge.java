@@ -9,6 +9,7 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import java.util.Set;
@@ -16,9 +17,7 @@ import java.util.Set;
 @Component
 public class MqttBridge extends AbstractBridge<String> implements MqttCallback, Bridge, MqttClientSetup {
 
-    //MQTT Client constant
-    public static final String READ_COMMAND = "read";
-    public static final String SENSOR_MQTT_TOPIC = "sensor";
+
 
     @Autowired
     public MqttBridge(Properties properties, DeviceManager deviceManager, MqttBroker mqttBroker) {
@@ -69,9 +68,9 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
         }
     }
 
-    public String publish(String deviceId, String content) {
+    public JSONObject publish(String deviceId, String content) {
         logger.info("MqttClient is publishing");
-
+        JSONObject result = new JSONObject();
         if (!mqttClient.isConnected())
             connectToBroker();
 
@@ -81,10 +80,16 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
             String topic = deviceManager.getDevice(deviceId).getTopic();
             mqttClient.publish(topic, mqttMsg);
             logger.info(" to device id : " + deviceId + " with the message: " + mqttMsg);
-            return mqttMsg.toString();
+
+            result.put("result", "success");
+            return result;
         } catch (MqttException e) {
             BridgeUtils.printMqttException(e, "Mqtt Client Public Exception.", logger);
-            return e.toString();
+
+            result.put("result", "success");
+            result.put("error", e.getMessage());
+            result.put("errorcode", e.getReasonCode());
+            return result;
         }
     }
 

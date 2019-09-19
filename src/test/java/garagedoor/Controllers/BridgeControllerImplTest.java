@@ -3,6 +3,8 @@ package garagedoor.Controllers;
 import garagedoor.MqttHttpsBridge.Bridge;
 
 import garagedoor.iot.device.DeviceManager;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -12,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.*;
 
 public class BridgeControllerImplTest {
@@ -50,14 +53,15 @@ public class BridgeControllerImplTest {
     }
 
     @Test
-    public void publish() {
-        String expectedResponse = "success";
+    public void publish() throws JSONException {
+        JSONObject expectedResponse = new JSONObject();
+        expectedResponse.put("result", "success");
         String id = "1";
         String msg = "toggle";
         when(bridge.publish(id, "toggle")).thenReturn(expectedResponse);
         String response = bridgeController.publish(id, msg);
         verify(bridge).publish(id, "toggle");
-        assertEquals(expectedResponse, response);
+        assertEquals(expectedResponse.toString(), response.toString());
     }
 
     @Test

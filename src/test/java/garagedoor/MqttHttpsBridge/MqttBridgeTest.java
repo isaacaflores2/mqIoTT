@@ -14,6 +14,8 @@ import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -89,10 +91,13 @@ public class MqttBridgeTest
     }
     
     @Test
-    public void testPublish() throws MqttException {
+    public void testPublish() throws MqttException, JSONException {
         System.out.println("publish Test:");
-        String content = "test test";
-        MqttMessage mqttMsg = new MqttMessage(content.getBytes());
+        String message = "test";
+        JSONObject expectedResponse = new JSONObject();
+        expectedResponse.put("result", "success");
+
+        MqttMessage mqttMsg = new MqttMessage(message.getBytes());
         mqttMsg.setQos(2);
 
         doAnswer(invocationOnMock -> {
@@ -102,9 +107,8 @@ public class MqttBridgeTest
         }).when(mqttClient).publish(topic2, mqttMsg);
 
         when(mqttClient.isConnected()).thenReturn(true);
-        String response = mqttBridge.publish(id2, content);
-        //verify(mqttClient).publish(topic2, mqttMsg);
-        assertEquals(content, response);        
+        JSONObject response = mqttBridge.publish(id2, message);
+        assertEquals(expectedResponse.toString(), response.toString());
     }
     
     @Test

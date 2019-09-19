@@ -3,6 +3,7 @@ package garagedoor.Controllers;
 import garagedoor.MqttHttpsBridge.Bridge;
 import garagedoor.iot.device.Device;
 import garagedoor.iot.device.DeviceManager;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -48,9 +49,8 @@ public class BridgeControllerImpl implements BridgeController
 
     @Override
     public String publish(String id, String msg) {
-        String response = "success";
-        bridge.publish(id, msg);
-        return response;
+        JSONObject result = bridge.publish(id, msg);
+        return result.toString();
     }
     
     @Override
