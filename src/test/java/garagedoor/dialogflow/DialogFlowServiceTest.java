@@ -1,7 +1,7 @@
 package garagedoor.dialogflow;
 
-import garagedoor.Controllers.BridgeControllerImpl;
-import garagedoor.Controllers.DeviceManagerControllerImpl;
+import garagedoor.controllers.BridgeControllerImpl;
+import garagedoor.controllers.DeviceManagerControllerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -28,7 +28,7 @@ class DialogFlowServiceTest {
     private DeviceManagerControllerImpl deviceManagerController;
 
     @BeforeEach
-    public void setUp() throws Exception {
+    public void setUp(){
         MockitoAnnotations.initMocks(this);
     }
 

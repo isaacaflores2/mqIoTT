@@ -1,7 +1,7 @@
 package garagedoor.dialogflow;
 
 import com.google.api.services.dialogflow.v2beta1.model.GoogleCloudDialogflowV2WebhookResponse;
-import garagedoor.Controllers.DialogFlowControllerImpl;
+import garagedoor.controllers.DialogFlowControllerImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -74,7 +74,7 @@ class DialogFlowControllerImplTest {
 
         GoogleCloudDialogflowV2WebhookResponse response = new GoogleCloudDialogflowV2WebhookResponse();
         response.setFulfillmentText(DialogFlowService.RESPONSE_ACTION_OPEN);
-        ResponseEntity<GoogleCloudDialogflowV2WebhookResponse> expectedResponsEntity = new ResponseEntity<GoogleCloudDialogflowV2WebhookResponse>(response, HttpStatus.OK);
+        ResponseEntity<GoogleCloudDialogflowV2WebhookResponse> expectedResponsEntity = new ResponseEntity<>(response, HttpStatus.OK);
 
         assertEquals(responseEntity,expectedResponsEntity );
     }

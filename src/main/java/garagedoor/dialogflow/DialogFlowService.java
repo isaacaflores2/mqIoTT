@@ -1,7 +1,7 @@
 package garagedoor.dialogflow;
 
-import garagedoor.Controllers.BridgeControllerImpl;
-import garagedoor.Controllers.DeviceManagerControllerImpl;
+import garagedoor.controllers.BridgeControllerImpl;
+import garagedoor.controllers.DeviceManagerControllerImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +62,7 @@ public class DialogFlowService implements DialogFlowRequestHandler {
                     logger.info(response);
             }
         } else {
-            response = response = "Sorry I did not receive an action with your request.";
+            response = "Sorry I did not receive an action with your request.";
             logger.info(response);
         }
         return response;
