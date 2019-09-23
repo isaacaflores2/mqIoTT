@@ -30,22 +30,6 @@ public abstract class AbstractBridge<T> implements Bridge, MqttClientSetup {
     protected Logger logger;
     private String lineSeperator;
 
-    public enum PublishResult {
-        SUCCESS,
-        FAILURE;
-
-        public String errorMessage;
-
-        PublishResult(){
-            errorMessage = null;
-        }
-
-        public void setErrorMessage(String msg){
-            errorMessage = errorMessage;
-        }
-    };
-
-
     public AbstractBridge() {
         mqttClient = null;
         isClientSetup = false;

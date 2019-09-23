@@ -24,6 +24,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
         super(properties, deviceManager, mqttBroker);
     }
 
+    @Override
     public void subscribe() {
         logger.info("MqttClient is subscribing...");
 
@@ -34,7 +35,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
             subscribeToAllTopics();
         }
 
-        logger.info("cliend has subscribed to all topics.");
+        logger.info("client has subscribed to all topics.");
     }
 
     @Override
@@ -78,6 +79,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
             MqttMessage mqttMsg = new MqttMessage(content.getBytes());
             mqttMsg.setQos(mqttBroker.qos);
             String topic = deviceManager.getDevice(deviceId).getTopic();
+
             mqttClient.publish(topic, mqttMsg);
             logger.info(" to device id : " + deviceId + " with the message: " + mqttMsg);
 
@@ -123,7 +125,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
 
     @Override
     public void deliveryComplete(IMqttDeliveryToken imdt) {
-        logger.debug("Message recieved by the broker!");
+        logger.debug("Message received by the broker!");
     }
 
 
@@ -133,7 +135,13 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
 
         loadProperties();
         connectToBroker();
+        subscribe();
 
+        loop();
+    }
+
+    private void loop(){
+        boolean onStartup = true;
         while (true) {
             //Check if client is not setup
             while (!mqttClient.isConnected()) {
