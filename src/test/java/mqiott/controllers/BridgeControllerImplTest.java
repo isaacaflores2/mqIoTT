@@ -40,16 +40,18 @@ public class BridgeControllerImplTest {
     }
 
     @Test
-    public void getMqttBridgeClientStatus() {
-        String expecedResponse = "<h1> MQTT Client is running </h1>";
+    public void getMqttBridgeClientStatus() throws JSONException {
+        JSONObject expectedResponse = new JSONObject();
+        expectedResponse.put("result", "connected");
+
         when(bridge.isSubscribed()).thenReturn(true);
         String response = bridgeController.getMqttBridgeClientStatus();
-        assertEquals(expecedResponse, response);
+        assertEquals(expectedResponse.toString(), response);
 
-        expecedResponse = "<h1> MQTT Client is not running....FIX IT</h1>";
+        expectedResponse.put("result", "disconnected");
         when(bridge.isSubscribed()).thenReturn(false);
         response = bridgeController.getMqttBridgeClientStatus();
-        assertEquals(expecedResponse, response);
+        assertEquals(expectedResponse.toString(), response);
     }
 
     @Test

@@ -2,15 +2,16 @@ package mqiott.controllers;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import mqiott.device.Device;
 import mqiott.device.DeviceManager;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/devicemanager")
 public class DeviceManagerControllerImpl implements DeviceManagerController
 {
     private DeviceManager<String> deviceManager;
@@ -64,14 +65,16 @@ public class DeviceManagerControllerImpl implements DeviceManagerController
     }
 
     @Override
-    public String getDeviceData(@PathVariable String deviceId) {
+    public String getDeviceData(@PathVariable String id) {
+        JSONObject result = new JSONObject();
+        String data  = deviceManager.getDeviceData(id);
 
-        String data  = deviceManager.getDeviceData(deviceId);
-
-        if(data == null)
+        if(data == null) {
             data = "Sorry. There is no available status on your garage right now.";
+        }
 
-        return data;
+        result.put("result", data);
+        return result.toString();
     }
 
     @Override

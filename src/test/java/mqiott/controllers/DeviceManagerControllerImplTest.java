@@ -4,6 +4,8 @@ package mqiott.controllers;
 import mqiott.device.Device;
 import mqiott.device.DeviceManager;
 import mqiott.device.MqttDevice;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -107,20 +109,25 @@ public class DeviceManagerControllerImplTest {
     }
 
     @Test
-    public void getDeviceData() {
-
+    public void getDeviceData() throws JSONException {
         String id = "1";
         String expectedData = "sample data";
+        JSONObject expectedResponse = new JSONObject();
+        expectedResponse.put("result", expectedData);
         when(deviceManager.getDeviceData(id)).thenReturn(expectedData);
+
         String data  = deviceManagerController.getDeviceData(id);
+
         verify(deviceManager).getDeviceData(id);
-        assertEquals(expectedData, data);
+        assertEquals(expectedResponse.toString(), data);
     }
 
     @Test
-    public void updateDeviceData() {
+    public void updateDeviceData() throws JSONException {
         String id = "1";
         String expectedData = "running";
+        JSONObject expectedResponse = new JSONObject();
+        expectedResponse.put("result", expectedData);
 
         doAnswer((i) -> {
             assertEquals(id, i.getArgument(0));
@@ -131,7 +138,7 @@ public class DeviceManagerControllerImplTest {
         when(deviceManager.getDeviceData(id)).thenReturn(expectedData);
 
         deviceManagerController.updateDeviceData(id, expectedData);
-        assertEquals(expectedData, deviceManagerController.getDeviceData(id));
+        assertEquals(expectedResponse.toString(), deviceManagerController.getDeviceData(id));
     }
 
     @Test

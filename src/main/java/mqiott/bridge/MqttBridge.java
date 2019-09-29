@@ -88,7 +88,7 @@ public class MqttBridge extends AbstractBridge<String> implements MqttCallback, 
         } catch (MqttException e) {
             BridgeUtils.printMqttException(e, "Mqtt Client Public Exception.", logger);
 
-            result.put("result", "success");
+            result.put("result", "error");
             result.put("error", e.getMessage());
             result.put("errorcode", e.getReasonCode());
             return result;

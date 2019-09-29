@@ -19,22 +19,22 @@ public interface DeviceManagerController {
     @ResponseBody
     Collection<Device<String>> getDevices();
 
-    @GetMapping("/get/{getId}")
+    @GetMapping("/get/{id}")
     @ResponseBody
     Device getDevice(@PathVariable String id);
 
-    @GetMapping("/contains/{getId}")
+    @GetMapping("/contains/{id}")
     @ResponseBody
     boolean containsDevice(@PathVariable String id);
 
-    @GetMapping("/getStatus/{getId}")
+    @GetMapping("/getStatus/{id}")
     @ResponseBody
     String getDeviceStatus(@PathVariable String id);
 
     @PostMapping("/updatestatus")
     void updateDeviceStatus(@RequestParam String id, @RequestParam String status);
 
-    @GetMapping("/device/data/{}")
+    @GetMapping(value = "/device/data/{id}", produces = "application/json")
     @ResponseBody
     String getDeviceData(@PathVariable String id);
 

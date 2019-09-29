@@ -33,14 +33,16 @@ public class BridgeControllerImpl implements BridgeController
     public String getMqttBridgeClientStatus()
     {
         String status;
-                        
+        JSONObject result = new JSONObject();
+
         if( bridge.isSubscribed()){
-            status = "<h1> MQTT Client is running </h1>";
+            status = "connected";
         }
         else                             
-            status = "<h1> MQTT Client is not running....FIX IT</h1>";
-                        
-        return status;
+            status = "disconnected";
+
+        result.put("result", status);
+        return result.toString();
     }
 
     @Override
