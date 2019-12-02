@@ -22,6 +22,7 @@ I have tried my best to make this code reusable to serve as a bridge for your ow
 4. ConfigService
    - This class reads the values from the application.properties file and provides them to the MqttBridge and MqttDeviceManager classes. 
 
+
 ## Dependencies 
 1. [Spring Boot](https://start.spring.io/)
    - Using [Spring Initializr][https://start.spring.io/] you can easily setup all requried spring boot dependencies for your SpringBoot project. This project utilized the SpringBoot starter Web and Security dependencies. 
